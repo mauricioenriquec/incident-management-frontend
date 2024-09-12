@@ -1,27 +1,8 @@
-import { useState, useEffect } from 'react';
-import api from '../services/api';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
-export const useAuth = () => {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const { data } = await api.get('/auth/profile');
-        setUser(data);
-      } catch (error) {
-        console.error('Failed to fetch user:', error);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
-    window.location.href = '/login'; // Redirect to login page after logout
-  };
-
-  return { user, logout };
+const useAuth = () => {
+  return useContext(AuthContext);
 };
+
+export default useAuth;

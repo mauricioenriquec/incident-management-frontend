@@ -1,47 +1,51 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirección
-import api from '../services/api'; // Asegúrate de que la ruta sea correcta
+import axios from '../services/api';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate(); // Inicializa useNavigate
-
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (token) {
-          const res = await api.get('/auth/me'); // Usa la instancia de Axios configurada
-          setUser(res.data);
-        }
-      } catch (error) {
-        console.error('Error loading user:', error);
-      }
-    };
-    loadUser();
-  }, []);
+  const [loading, setLoading] = useState(true);
 
   const login = async (email, password) => {
     try {
-      const res = await api.post('/auth/login', { email, password });
-      localStorage.setItem('token', res.data.token);
-      setUser(res.data.user);
-      navigate('/dashboard'); // Redirige al dashboard después del inicio de sesión exitoso
+      const response = await axios.post('/auth/login', { email, password });
+      setUser(response.data.user);
+      localStorage.setItem('token', response.data.token);
+      return true;
     } catch (error) {
-      console.error('Error during login:', error);
+      console.error('Login failed:', error.response ? error.response.data.message : error.message);
+      return false;
     }
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
     setUser(null);
-    navigate('/login'); // Redirige a la página de inicio de sesión después de cerrar sesión
+    localStorage.removeItem('token');
   };
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await axios.get('http://localhost:5000/api/users/me', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          setUser(response.data);
+        } catch (error) {
+          console.error('Failed to fetch user:', error.response ? error.response.data.message : error.message);
+          logout();
+        }
+      }
+      setLoading(false);
+    };
+
+    fetchUser();
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

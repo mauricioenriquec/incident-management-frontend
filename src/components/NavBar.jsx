@@ -1,29 +1,25 @@
-// src/components/NavBar.jsx
-
 import React, { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaSignOutAlt } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { FaSignOutAlt, FaUser } from 'react-icons/fa';
 
 const NavBar = () => {
-  const { user, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  const { isAuthenticated, logout } = useContext(AuthContext);
 
   return (
-    <nav className="bg-gray-800 text-white p-4 flex justify-between items-center">
-      <div className="text-xl font-bold">Incident Manager</div>
-      <div className="space-x-4">
-        <Link to="/profile" className="flex items-center">
-          <FaUser className="mr-2" /> My Profile
-        </Link>
-        <button onClick={handleLogout} className="flex items-center">
-          <FaSignOutAlt className="mr-2" /> Logout
-        </button>
+    <nav className="bg-gray-800 p-4">
+      <div className="container mx-auto flex justify-between items-center">
+        <h1 className="text-white text-xl">Incident Management</h1>
+        {isAuthenticated && (
+          <div>
+            <Link to="/profile" className="text-white mx-2">
+              <FaUser /> My Profile
+            </Link>
+            <button onClick={logout} className="text-white mx-2">
+              <FaSignOutAlt /> Logout
+            </button>
+          </div>
+        )}
       </div>
     </nav>
   );

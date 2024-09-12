@@ -1,5 +1,3 @@
-// src/pages/ProfilePage.jsx
-
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { FaSave } from 'react-icons/fa';
@@ -21,8 +19,6 @@ const ProfilePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Send formData to the backend to update user info
-      // await axios.put('/api/auth/update', formData);
       alert('Profile updated!');
     } catch (error) {
       console.error('Error updating profile:', error);

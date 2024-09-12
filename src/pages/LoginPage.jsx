@@ -1,60 +1,56 @@
-// src/pages/LoginPage.jsx
-import React, { useState } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import { FaLock, FaUser } from 'react-icons/fa';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await api.post('/auth/login', { email, password });
-      localStorage.setItem('token', response.data.token);
-      navigate('/dashboard');
-    } catch (err) {
-      setError('Login failed. Please check your credentials.');
+    const success = await login(email, password);
+    if (success) {
+      navigate('/');  // Redirect to dashboard or home page
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="w-full max-w-sm bg-white p-8 rounded shadow-lg">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-        <form onSubmit={handleLogin}>
-          <div className="relative mb-4">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
+        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2" htmlFor="email">
+              <FaUser className="inline-block mr-2" /> Email
+            </label>
             <input
               type="email"
+              id="email"
+              className="w-full px-3 py-2 border border-gray-300 rounded"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              className="w-full p-3 border border-gray-300 rounded"
+              required
             />
           </div>
-          <div className="relative mb-4">
+          <div className="mb-6">
+            <label className="block text-gray-700 mb-2" htmlFor="password">
+              <FaLock className="inline-block mr-2" /> Password
+            </label>
             <input
-              type={showPassword ? 'text' : 'password'}
+              type="password"
+              id="password"
+              className="w-full px-3 py-2 border border-gray-300 rounded"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              className="w-full p-3 border border-gray-300 rounded"
+              required
             />
-            <span
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
           </div>
-          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            className="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
             Login
           </button>
