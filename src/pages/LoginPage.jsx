@@ -13,7 +13,7 @@ const LoginPage = () => {
     e.preventDefault();
     const success = await login(email, password);
     if (success) {
-      navigate('/');  // Redirect to dashboard or home page
+      navigate('/');
     }
   };
 
