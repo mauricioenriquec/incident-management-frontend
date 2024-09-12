@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
-import ProfilePage from './pages/ProfilePage';
+import ProfilePage from './pages/UsersManagerPage';
 import IncidentForm from './components/IncidentForm';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -19,7 +19,7 @@ function App() {
           element={<DashboardPage />} 
         />
         <Route 
-          path="/profile" 
+          path="/users" 
           element={<ProfilePage />} 
         />
         <Route 
