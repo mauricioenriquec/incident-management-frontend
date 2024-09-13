@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import api from '../services/api';
 import dayjs from 'dayjs';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import { AuthContext } from '../context/AuthContext'; // Importamos el contexto
+import { AuthContext } from '../context/AuthContext';
 
 const IncidentList = () => {
   const [incidents, setIncidents] = useState([]);
@@ -15,7 +15,7 @@ const IncidentList = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
 
-  const { user } = useContext(AuthContext); // Obtenemos el usuario del contexto
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchIncidents = async () => {
