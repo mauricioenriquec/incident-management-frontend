@@ -6,6 +6,7 @@ import { FaLock, FaUser } from 'react-icons/fa';
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showErrorModal, setShowErrorModal] = useState(false); // Estado para controlar el modal de error
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -14,6 +15,8 @@ const LoginPage = () => {
     const success = await login(email, password);
     if (success) {
       navigate('/');
+    } else {
+      setShowErrorModal(true);
     }
   };
 
@@ -65,6 +68,22 @@ const LoginPage = () => {
             className="w-16 h-16"
           />
         </div>
+
+        {/* Modal de error */}
+        {showErrorModal && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+              <h2 className="text-xl font-bold text-red-600 mb-4">Error</h2>
+              <p className="text-gray-800 mb-4">Credenciales inválidas. Por favor, inténtalo de nuevo.</p>
+              <button
+                className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                onClick={() => setShowErrorModal(false)} // Cerrar el modal
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
